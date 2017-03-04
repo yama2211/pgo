@@ -5,30 +5,21 @@
 </head>
 <body>
 <script>
-    function fileListDirectory(files) {
-        var ファイル数 = files.length;
-        var ファイル名 = new Array();
-        var パス     = new Array();
-        for (i=0; i<ファイル数; i++) {
-            ファイル名[i] = files[i].name;
-            パス[i]       = files[i].webkitRelativePath;    // 行Ａ
-        }
-        var 表示内容 = "";
-            for (i=0; i<ファイル数; i++) {
-            if (ファイル名[i] == ".") {                     // 行Ｂ
-                表示内容 += "フォルダ：";
-            }
-            else {
-                表示内容 += "ファイル：";
-            }
-            表示内容 += パス[i] + "<br>";
-        }
-        document.getElementById('list').innerHTML = 表示内容;
-    }
+//JScript
+//folderspec内全ファイルをリスト化
+function getFileList(folderspec,sw) {//folderspac:対象フォルダ sw:0=Path無 1=Path付
+ var list = new Array();
+ var fso = new ActiveXObject("Scripting.FileSystemObject");
+ if (folderspec.length == 0) folderspec = ".";
+ var f = fso.GetFolder(folderspec);
+ var f1 = new Enumerator(f.files);
+ for (; !f1.atEnd(); f1.moveNext()) {
+  fn = f1.item();
+  if (sw == 0) fn = fso.GetFileName(f1.item());//Pathを取り除いてファイル名だけを取得
+  list.push(fn);
+ }
+ return list;//Array
+}
 </script>
-<p><input  type="file"
-    webkitdirectory directory                             
-    onChange="fileListDirectory(this.files)"></p>
-<div id="list" class="red">結果がここに表示されます。</div>
 </body>
 </html>
